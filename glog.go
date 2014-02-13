@@ -418,6 +418,7 @@ type loggingT struct {
 	// compatibility. TODO: does this matter enough to fix? Seems unlikely.
 	toStderr     bool // The -logtostderr flag.
 	alsoToStderr bool // The -alsologtostderr flag.
+	useHeader    bool // The -alsologtostderr flag.
 
 	// Level flag. Handled atomically.
 	stderrThreshold severity // The -stderrthreshold flag.
@@ -528,6 +529,9 @@ where the fields are defined as follows:
 	msg              The user-supplied message
 */
 func (l *loggingT) header(s severity) *buffer {
+	if !l.useHeader {
+		return l.getBuffer()
+	}
 	// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
 	now := timeNow()
 	_, file, line, ok := runtime.Caller(3) // It's always the same number of frames to the user's call.
