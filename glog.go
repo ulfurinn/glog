@@ -401,6 +401,7 @@ func init() {
 
 	// Default stderrThreshold is ERROR.
 	logging.stderrThreshold = errorLog
+	logging.useHeader = true
 
 	logging.setVState(0, nil, false)
 	go logging.flushDaemon()
@@ -418,7 +419,7 @@ type loggingT struct {
 	// compatibility. TODO: does this matter enough to fix? Seems unlikely.
 	toStderr     bool // The -logtostderr flag.
 	alsoToStderr bool // The -alsologtostderr flag.
-	useHeader    bool // The -alsologtostderr flag.
+	useHeader    bool
 
 	// Level flag. Handled atomically.
 	stderrThreshold severity // The -stderrthreshold flag.
@@ -960,6 +961,11 @@ func (v Verbose) Infof(format string, args ...interface{}) {
 	if v {
 		logging.printf(infoLog, format, args...)
 	}
+}
+
+// UseHeader toggles the header line in printouts.
+func UseHeader(use bool) {
+	logging.useHeader = use
 }
 
 // Info logs to the INFO log.
